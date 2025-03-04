@@ -7,23 +7,27 @@ This script adds the ability to use `rmpc` (a client for controlling the MPD mus
 - Adding selected tracks to the MPD playlist.
 
 **How to Use:**
-1. Ensure that `yazi`, `rmpc`, and `mpd` are installed on your system.
-2. Add the script to the `yazi.toml` configuration file in the `[opener]` section, as shown below. You can specify your own path and script name:
+1. Make the Script Executable
+   ```sh
+   chmod +x qute-rofi-translate.py
+   ```
+2. Ensure that `yazi`, `rmpc`, and `mpd` are installed on your system.
+3. Add the script to the `yazi.toml` configuration file in the `[opener]` section, as shown below. You can specify your own path and script name:
    ```toml
    [opener]
    audio = [
        { run = '~/path/to/run_for_yazi.py "$@"', block = true, for = "unix" }
    ]
    ```
-3. Add a rule for opening audio files in the `[open]` section:
+4. Add a rule for opening audio files in the `[open]` section:
    ```toml
    [open]
    prepend_rules = [
        { mime = "audio/*", use = "audio" },
    ]
    ```
-4. Save the changes and restart `yazi`.
-5. Now, when you select a music file in `yazi`, it will automatically open and play via `rmpc`.
+5. Save the changes and restart `yazi`.
+6. Now, when you select a music file in `yazi`, it will automatically open and play via `rmpc`.
 
 **Dependencies:**
 - `yazi` (file manager)
