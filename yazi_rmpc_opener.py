@@ -26,18 +26,20 @@ class RmpcClient:
         self.status = None
 
     def run_command(self, command, *args):
-        full_command = ["rmpc", command.value] + list(args)
         try:
             if command != RmpcCommand.NO_COMMAND:
                 result = subprocess.run(
-                    full_command, text=True, capture_output=True, check=True
+                    ["rmpc", command.value] + list(args),
+                    text=True,
+                    capture_output=True,
+                    check=True,
                 )
                 return result.stdout
             else:
                 subprocess.run(["rmpc"], check=True)
                 return ""
         except subprocess.CalledProcessError as e:
-            logging.error(f"Error executing command '{' '.join(full_command)}': {e}")
+            logging.error(f"Error executing command '{command.value}': {e}")
             raise
 
     def get_status(self):
