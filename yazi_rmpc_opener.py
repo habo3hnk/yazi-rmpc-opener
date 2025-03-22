@@ -6,6 +6,7 @@ import json
 import logging
 import argparse
 from enum import Enum
+import shlex
 
 
 logging.basicConfig(
@@ -26,13 +27,13 @@ class RmpcClient:
         self.status = None
 
     def run_command(self, command, *args):
+        safe_args = [shlex.quote(arg) for arg in args]
+        full_command = ["rmpc", command.value] + safe_args
+
         try:
             if command != RmpcCommand.NO_COMMAND:
                 result = subprocess.run(
-                    ["rmpc", command.value] + list(args),
-                    text=True,
-                    capture_output=True,
-                    check=True,
+                    full_command, text=True, capture_output=True, check=True
                 )
                 return result.stdout
             else:
