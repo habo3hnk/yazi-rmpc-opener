@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import subprocess
+import sh
 import sys
 import json
 import logging
@@ -14,7 +14,6 @@ logging.basicConfig(
 
 
 class RmpcCommand(Enum):
-    NO_COMMAND = "--"
     STATUS = "status"
     ADD = "add"
     NEXT = "next"
@@ -25,25 +24,9 @@ class RmpcClient:
     def __init__(self):
         self.status = None
 
-    def run_command(self, command, *args):
-        full_command = ["rmpc", command.value] + list(args)
-
-        try:
-            if command != RmpcCommand.NO_COMMAND:
-                result = subprocess.run(
-                    full_command, text=True, capture_output=True, check=True
-                )
-                return result.stdout
-            else:
-                subprocess.run(["rmpc"], check=True)
-                return ""
-        except subprocess.CalledProcessError as e:
-            logging.error(f"Error executing command '{command.value}': {e}")
-            raise
-
     def get_status(self):
         if not self.status:
-            output = self.run_command(RmpcCommand.STATUS)
+            output = sh.rmpc(RmpcCommand.STATUS.value)
             try:
                 self.status = json.loads(output)
             except json.JSONDecodeError as e:
@@ -54,7 +37,7 @@ class RmpcClient:
     def select_last_added_track(self, playlist_len, current_track_number):
         for _ in range(playlist_len - current_track_number):
             try:
-                self.run_command(RmpcCommand.NEXT)
+                sh.rmpc(RmpcCommand.NEXT.value)
             except Exception as e:
                 logging.error(f"Error selecting next track: {e}")
                 sys.exit(1)
@@ -64,7 +47,7 @@ class RmpcClient:
 
         for track in tracks:
             try:
-                self.run_command(RmpcCommand.ADD, track)
+                sh.rmpc(RmpcCommand.ADD.value, track)
             except Exception as e:
                 logging.error(f"Error adding track {track} to queue: {e}")
                 sys.exit(1)
@@ -75,8 +58,8 @@ class RmpcClient:
             self.select_last_added_track(playlist_len, current_track_number)
 
     def play(self):
-        self.run_command(RmpcCommand.PLAY)
-        self.run_command(RmpcCommand.NO_COMMAND)
+        sh.rmpc(RmpcCommand.PLAY.value)
+        sh.rmpc(_in=sys.stdin, _out=sys.stdout, _err=sys.stderr)
 
 
 class RmpcApp:
