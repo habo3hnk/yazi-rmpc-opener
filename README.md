@@ -35,6 +35,7 @@ This script adds the ability to use `rmpc` (a client for controlling the MPD mus
 - `yazi` (file manager)
 - `rmpc` (MPD control client)
 - `mpd` (music server)
+- `sh` (Python module for running shell commands)
 
 **Example Workflow:**
 1. Open `yazi` and navigate to a folder containing music.
