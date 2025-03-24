@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import subprocess
 import sh
 import sys
 import json
@@ -60,7 +59,7 @@ class RmpcClient:
 
     def play(self):
         sh.rmpc(RmpcCommand.PLAY.value)
-        subprocess.run(["rmpc"], check=True)
+        sh.rmpc(_in=sys.stdin, _out=sys.stdout, _err=sys.stderr)
 
 
 class RmpcApp:
